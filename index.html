@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>3D Tic-Tac-Toe</title>
+  <link rel="stylesheet" href="index.css">
+  <script defer src="index.js"></script>
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar" aria-label="Game controls and status">
+      <header class="brand">
+        <div class="brand-icon" aria-hidden="true"></div>
+        <h1>3D Tic-Tac-Toe</h1>
+      </header>
+      <section class="status-card" aria-labelledby="status-heading">
+        <h2 id="status-heading">Status</h2>
+        <div class="status-grid">
+          <div class="status-row">
+            <span class="label">Current Turn</span>
+            <span id="turn-indicator" class="value">X</span>
+          </div>
+          <div class="status-row">
+            <span class="label">Floors</span>
+            <span id="floor-count" class="value">1 / 3</span>
+          </div>
+        </div>
+        <p id="status-message" class="status-message" aria-live="polite">Preparing match…</p>
+      </section>
+      <section class="scoreboard" aria-labelledby="score-heading">
+        <h2 id="score-heading">Scoreboard</h2>
+        <div class="score-grid">
+          <div class="score-item">
+            <span class="label">X Wins</span>
+            <span id="score-x" class="value">0</span>
+          </div>
+          <div class="score-item">
+            <span class="label">O Wins</span>
+            <span id="score-o" class="value">0</span>
+          </div>
+          <div class="score-item">
+            <span class="label">Draws</span>
+            <span id="score-d" class="value">0</span>
+          </div>
+        </div>
+      </section>
+      <section class="controls" aria-labelledby="controls-heading">
+        <h2 id="controls-heading">Controls</h2>
+        <div class="control-buttons">
+          <button id="new-match" class="btn primary" type="button">New Match</button>
+          <button id="undo-move" class="btn" type="button" disabled>Undo Move</button>
+          <button id="reset-scores" class="btn danger" type="button">Reset Scores</button>
+          <button id="open-settings" class="btn outline" type="button">Settings</button>
+        </div>
+      </section>
+    </aside>
+    <main class="board-area">
+      <div id="board-stack" class="board-stack" role="grid" aria-label="3D Tic-Tac-Toe board"></div>
+    </main>
+  </div>
+
+  <div id="settings-modal" class="modal" role="dialog" aria-modal="true" aria-labelledby="settings-title" hidden>
+    <div class="modal__backdrop" data-modal-dismiss></div>
+    <div class="modal__dialog" role="document">
+      <header class="modal__header">
+        <h2 id="settings-title">Settings</h2>
+      </header>
+      <div class="modal__body">
+        <label class="toggle">
+          <input type="checkbox" id="toggle-coords">
+          <span>Show cell coordinates</span>
+        </label>
+        <label class="toggle">
+          <input type="checkbox" id="toggle-sounds" checked>
+          <span>Enable sounds</span>
+        </label>
+        <label class="select">
+          <span>First player on next match</span>
+          <select id="select-first-player">
+            <option value="X">Player X</option>
+            <option value="O">Player O</option>
+          </select>
+        </label>
+      </div>
+      <footer class="modal__footer">
+        <button type="button" id="save-settings" class="btn primary">Save</button>
+      </footer>
+    </div>
+  </div>
+</body>
+</html>
