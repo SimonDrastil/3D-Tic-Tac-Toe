@@ -559,12 +559,12 @@
     threeState.defaultCamera.target = controls.target.clone();
     threeState.defaultCameraOffset = camera.position.clone().sub(controls.target);
 
-    const ambient = new THREE.AmbientLight(0xffffff, 0.55);
+    const ambient = new THREE.AmbientLight(0xffffff, 0.62);
     scene.add(ambient);
-    const dir = new THREE.DirectionalLight(0xffffff, 0.85);
+    const dir = new THREE.DirectionalLight(0xffffff, 0.95);
     dir.position.set(6, 12, 6);
     scene.add(dir);
-    const hemi = new THREE.HemisphereLight(0x7c5cff, 0x080810, 0.35);
+    const hemi = new THREE.HemisphereLight(0xffffff, 0x040404, 0.4);
     scene.add(hemi);
 
     threeState.geometries = {
@@ -575,38 +575,48 @@
 
     threeState.materials = {
       blockX: new THREE.MeshPhysicalMaterial({
-        color: 0x77c9ff,
-        metalness: 0.35,
-        roughness: 0.35,
-        clearcoat: 0.6,
-        clearcoatRoughness: 0.25
+        color: 0xd6dae1,
+        metalness: 0.55,
+        roughness: 0.2,
+        clearcoat: 0.7,
+        clearcoatRoughness: 0.22
       }),
       blockO: new THREE.MeshPhysicalMaterial({
-        color: 0xffd166,
-        metalness: 0.28,
-        roughness: 0.38,
-        clearcoat: 0.55,
-        clearcoatRoughness: 0.25
+        color: 0x2c2c2e,
+        metalness: 0.6,
+        roughness: 0.32,
+        clearcoat: 0.65,
+        clearcoatRoughness: 0.28
       }),
       plateActive: new THREE.MeshPhysicalMaterial({
-        color: 0xb4c0ff,
+        color: 0xb8b8b8,
         transparent: true,
-        opacity: 0.46,
-        transmission: 0.86,
-        roughness: 0.18,
-        thickness: 0.65,
-        metalness: 0.05,
-        clearcoat: 0.35
+        opacity: 0.42,
+        transmission: 0.88,
+        roughness: 0.16,
+        thickness: 0.68,
+        metalness: 0.08,
+        clearcoat: 0.4
       }),
       plateLocked: new THREE.MeshPhysicalMaterial({
-        color: 0x8087a8,
+        color: 0x3a3a3a,
         transparent: true,
-        opacity: 0.32,
-        transmission: 0.55,
-        roughness: 0.32,
+        opacity: 0.28,
+        transmission: 0.48,
+        roughness: 0.38,
         thickness: 0.45,
-        metalness: 0.02,
-        clearcoat: 0.2
+        metalness: 0.06,
+        clearcoat: 0.25
+      }),
+      gridLine: new THREE.LineBasicMaterial({
+        color: 0xbebebe,
+        transparent: true,
+        opacity: 0.6
+      }),
+      gridEdge: new THREE.LineBasicMaterial({
+        color: 0xe4e4e4,
+        transparent: true,
+        opacity: 0.85
       }),
       hit: new THREE.MeshBasicMaterial({
         color: 0xffffff,
@@ -620,7 +630,7 @@
     threeState.raycaster = new THREE.Raycaster();
 
     const hoverEdges = new THREE.EdgesGeometry(threeState.geometries.block);
-    const hoverMat = new THREE.LineBasicMaterial({ color: 0xffffff });
+    const hoverMat = new THREE.LineBasicMaterial({ color: 0xcacaca });
     const hoverOutline = new THREE.LineSegments(hoverEdges, hoverMat);
     hoverOutline.visible = false;
     hoverOutline.position.y = BLOCK_HEIGHT / 2 + HOVER_ELEVATION;
@@ -728,6 +738,20 @@
     threeState.pendingFloorAnimation = null;
   }
 
+  function createGridGeometry() {
+    const offset = ((BOARD_SIZE - 1) * CELL_SPACING) / 2;
+    const y = PLATE_THICKNESS / 2 + 0.001;
+    const positions = [];
+    for (let i = 0; i < BOARD_SIZE; i += 1) {
+      const p = i * CELL_SPACING - offset;
+      positions.push(-offset, y, p, offset, y, p);
+      positions.push(p, y, -offset, p, y, offset);
+    }
+    const geometry = new THREE.BufferGeometry();
+    geometry.setAttribute('position', new THREE.Float32BufferAttribute(positions, 3));
+    return geometry;
+  }
+
   function buildFloorAnchor(z) {
     const anchor = new THREE.Group();
     anchor.position.y = z * FLOOR_VERTICAL_SPACING;
@@ -740,6 +764,23 @@
     anchor.userData.plate = plate;
     anchor.userData.materialActive = activeMaterial;
     anchor.userData.materialLocked = lockedMaterial;
+
+    const gridGeometry = createGridGeometry();
+    const gridMaterial = threeState.materials.gridLine.clone();
+    const gridLines = new THREE.LineSegments(gridGeometry, gridMaterial);
+    anchor.add(gridLines);
+
+    const edgeGeometry = new THREE.EdgesGeometry(threeState.geometries.plate);
+    const edgeMaterial = threeState.materials.gridEdge.clone();
+    const edgeLines = new THREE.LineSegments(edgeGeometry, edgeMaterial);
+    anchor.add(edgeLines);
+
+    anchor.userData.gridLines = gridLines;
+    anchor.userData.gridGeometry = gridGeometry;
+    anchor.userData.gridMaterial = gridMaterial;
+    anchor.userData.edgeLines = edgeLines;
+    anchor.userData.edgeGeometry = edgeGeometry;
+    anchor.userData.edgeMaterial = edgeMaterial;
 
     const offset = ((BOARD_SIZE - 1) * CELL_SPACING) / 2;
     for (let y = 0; y < BOARD_SIZE; y += 1) {
@@ -775,6 +816,28 @@
       const hoverData = threeState.cellAnchors.get(threeState.hoveredCellKey);
       if (!hoverData) {
         setHoverCell(null);
+      }
+    }
+    if (anchor.userData.gridLines) {
+      if (anchor.userData.gridLines.parent) {
+        anchor.userData.gridLines.parent.remove(anchor.userData.gridLines);
+      }
+      if (anchor.userData.gridMaterial) {
+        anchor.userData.gridMaterial.dispose();
+      }
+      if (anchor.userData.gridGeometry) {
+        anchor.userData.gridGeometry.dispose();
+      }
+    }
+    if (anchor.userData.edgeLines) {
+      if (anchor.userData.edgeLines.parent) {
+        anchor.userData.edgeLines.parent.remove(anchor.userData.edgeLines);
+      }
+      if (anchor.userData.edgeMaterial) {
+        anchor.userData.edgeMaterial.dispose();
+      }
+      if (anchor.userData.edgeGeometry) {
+        anchor.userData.edgeGeometry.dispose();
       }
     }
     threeState.scene.remove(anchor);
@@ -848,6 +911,14 @@
     const targetMaterial = locked ? anchor.userData.materialLocked : anchor.userData.materialActive;
     if (plate && plate.material !== targetMaterial) {
       plate.material = targetMaterial;
+    }
+    if (anchor.userData.gridMaterial) {
+      anchor.userData.gridMaterial.opacity = locked ? 0.35 : 0.6;
+      anchor.userData.gridMaterial.needsUpdate = true;
+    }
+    if (anchor.userData.edgeMaterial) {
+      anchor.userData.edgeMaterial.opacity = locked ? 0.5 : 0.85;
+      anchor.userData.edgeMaterial.needsUpdate = true;
     }
     anchor.userData.isLocked = locked;
   }

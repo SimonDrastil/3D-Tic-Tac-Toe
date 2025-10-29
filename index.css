@@ -1,16 +1,16 @@
 :root {
-  --color-bg-start: #0b0b0b;
-  --color-bg-end: #121212;
-  --color-text: #ededed;
-  --color-muted: #9aa0a6;
-  --color-accent: #7c5cff;
-  --color-x: #77c9ff;
-  --color-o: #ffd166;
+  --color-bg-start: #020202;
+  --color-bg-end: #0b0b0b;
+  --color-text: #f5f5f5;
+  --color-muted: #b3b3b3;
+  --color-accent: #c0c0c0;
+  --color-x: #e3e3e3;
+  --color-o: #6f6f6f;
   --color-win: #2fb24c;
   --color-danger: #ff5b5b;
-  --surface-bg: rgba(32, 32, 40, 0.45);
-  --surface-border: rgba(255, 255, 255, 0.08);
-  --surface-shadow: 0 18px 40px rgba(0, 0, 0, 0.45);
+  --surface-bg: rgba(18, 18, 18, 0.75);
+  --surface-border: rgba(255, 255, 255, 0.1);
+  --surface-shadow: 0 20px 50px rgba(0, 0, 0, 0.6);
   --radius-lg: 22px;
   --radius-md: 16px;
   --radius-sm: 10px;
@@ -26,7 +26,7 @@ body {
   margin: 0;
   min-height: 100vh;
   font-family: "Segoe UI", system-ui, -apple-system, BlinkMacSystemFont, "Helvetica Neue", sans-serif;
-  background: radial-gradient(circle at top right, rgba(124, 92, 255, 0.18), transparent 45%),
+  background: radial-gradient(circle at top right, rgba(192, 192, 192, 0.18), transparent 45%),
     linear-gradient(135deg, var(--color-bg-start), var(--color-bg-end));
   color: var(--color-text);
   display: flex;
@@ -40,7 +40,7 @@ body::before {
   position: fixed;
   inset: 0;
   pointer-events: none;
-  background: linear-gradient(160deg, rgba(255, 255, 255, 0.05), transparent 55%);
+  background: linear-gradient(160deg, rgba(255, 255, 255, 0.04), transparent 60%);
 }
 
 .app-shell {
@@ -80,10 +80,10 @@ body::before {
   width: 38px;
   height: 38px;
   border-radius: 12px;
-  background: linear-gradient(160deg, var(--color-accent), rgba(124, 92, 255, 0.4));
+  background: linear-gradient(150deg, rgba(255, 255, 255, 0.65), rgba(96, 96, 96, 0.6));
   position: relative;
   transform: rotateX(20deg) rotateZ(20deg);
-  box-shadow: 0 10px 20px rgba(124, 92, 255, 0.45);
+  box-shadow: 0 10px 22px rgba(0, 0, 0, 0.55);
 }
 
 .brand-icon::after,
@@ -91,7 +91,7 @@ body::before {
   content: "";
   position: absolute;
   border-radius: 6px;
-  background: rgba(255, 255, 255, 0.35);
+  background: rgba(255, 255, 255, 0.38);
 }
 
 .brand-icon::after {
@@ -191,21 +191,23 @@ body::before {
   font: inherit;
   padding: 12px 16px;
   border-radius: var(--radius-md);
-  border: 1px solid transparent;
+  border: 1px solid rgba(255, 255, 255, 0.18);
   cursor: pointer;
-  transition: transform var(--transition-fast), box-shadow var(--transition-fast), background var(--transition-fast);
-  background: rgba(255, 255, 255, 0.08);
+  transition: transform var(--transition-fast), box-shadow var(--transition-fast), background var(--transition-fast), border-color var(--transition-fast);
+  background: linear-gradient(160deg, rgba(88, 88, 88, 0.6), rgba(24, 24, 24, 0.9));
   color: var(--color-text);
 }
 
 .btn:hover:not(:disabled) {
   transform: translateY(-2px);
-  box-shadow: 0 12px 22px rgba(0, 0, 0, 0.35);
+  box-shadow: 0 14px 28px rgba(0, 0, 0, 0.5);
+  border-color: rgba(255, 255, 255, 0.32);
 }
 
 .btn:active:not(:disabled) {
   transform: translateY(0);
-  box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.45);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.45);
+  background: linear-gradient(160deg, rgba(52, 52, 52, 0.7), rgba(16, 16, 16, 0.92));
 }
 
 .btn:disabled {
@@ -214,14 +216,14 @@ body::before {
 }
 
 .btn.primary {
-  background: linear-gradient(135deg, rgba(124, 92, 255, 0.85), rgba(124, 92, 255, 0.65));
-  border-color: rgba(124, 92, 255, 0.25);
-  color: white;
+  background: linear-gradient(140deg, rgba(210, 210, 210, 0.92), rgba(90, 90, 90, 0.85));
+  border-color: rgba(255, 255, 255, 0.32);
+  color: #0b0b0b;
 }
 
 .btn.outline {
   background: transparent;
-  border-color: rgba(255, 255, 255, 0.16);
+  border-color: rgba(192, 192, 192, 0.4);
 }
 
 .btn.danger {
@@ -245,11 +247,11 @@ body::before {
   width: min(640px, 100%);
   height: min(640px, 80vh);
   border-radius: var(--radius-lg);
-  border: 1px solid rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.15);
   box-shadow: var(--surface-shadow);
   overflow: hidden;
-  background: radial-gradient(circle at top, rgba(124, 92, 255, 0.12), transparent 55%),
-    linear-gradient(180deg, rgba(20, 20, 30, 0.65), rgba(10, 10, 18, 0.55));
+  background: radial-gradient(circle at top, rgba(160, 160, 160, 0.12), transparent 55%),
+    linear-gradient(180deg, rgba(28, 28, 28, 0.82), rgba(6, 6, 6, 0.85));
 }
 
 #game-canvas {
@@ -298,9 +300,9 @@ body::before {
   gap: 12px;
   padding: 14px;
   border-radius: var(--radius-lg);
-  background: rgba(18, 18, 22, 0.72);
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  box-shadow: 0 18px 38px rgba(0, 0, 0, 0.55);
+  background: rgba(12, 12, 12, 0.78);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  box-shadow: 0 18px 38px rgba(0, 0, 0, 0.65);
   transform-style: preserve-3d;
   transform: rotateZ(45deg) rotateX(-58deg);
   transform-origin: center;
@@ -342,8 +344,8 @@ body::before {
   align-items: center;
   justify-content: center;
   border-radius: var(--radius-sm);
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  background: rgba(16, 16, 22, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  background: linear-gradient(160deg, rgba(32, 32, 32, 0.85), rgba(10, 10, 10, 0.82));
   color: var(--color-text);
   font-size: clamp(2.2rem, 5vw, 3.4rem);
   font-weight: 700;
@@ -361,11 +363,11 @@ body::before {
 .cell:not(:disabled):hover,
 .cell:not(:disabled):focus-visible {
   transform: translateY(-6px);
-  box-shadow: 0 18px 28px rgba(0, 0, 0, 0.45);
+  box-shadow: 0 20px 30px rgba(0, 0, 0, 0.6);
 }
 
 .cell:focus-visible {
-  outline: 3px solid rgba(124, 92, 255, 0.8);
+  outline: 3px solid rgba(192, 192, 192, 0.8);
   outline-offset: 2px;
 }
 
@@ -376,7 +378,7 @@ body::before {
   left: 10px;
   font-size: 0.7rem;
   letter-spacing: 0.08em;
-  color: rgba(255, 255, 255, 0.38);
+  color: rgba(224, 224, 224, 0.45);
   opacity: 0;
   transform: translateY(-6px);
   transition: opacity var(--transition-fast), transform var(--transition-fast);
@@ -429,9 +431,9 @@ body::before {
 
 .modal__dialog {
   position: relative;
-  background: rgba(30, 30, 40, 0.85);
+  background: rgba(16, 16, 16, 0.86);
   border-radius: var(--radius-lg);
-  border: 1px solid rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.18);
   box-shadow: var(--surface-shadow);
   padding: 24px;
   width: min(420px, 90vw);
@@ -483,7 +485,7 @@ body::before {
 }
 
 .toggle input[type="checkbox"]:checked {
-  background: rgba(124, 92, 255, 0.8);
+  background: linear-gradient(140deg, rgba(210, 210, 210, 0.9), rgba(90, 90, 90, 0.85));
 }
 
 .toggle input[type="checkbox"]:checked::after {
@@ -495,8 +497,8 @@ body::before {
   flex: 1;
   padding: 10px 12px;
   border-radius: var(--radius-md);
-  border: 1px solid rgba(255, 255, 255, 0.16);
-  background: rgba(16, 16, 22, 0.7);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  background: linear-gradient(160deg, rgba(40, 40, 40, 0.85), rgba(12, 12, 12, 0.92));
   color: var(--color-text);
 }
 
